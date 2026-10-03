@@ -1,3 +1,4 @@
+
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import "./globals.css";
@@ -21,6 +22,9 @@ export const metadata: Metadata = {
   authors: [{ name: "Hassan Asghar" }],
   creator: "Hassan Asghar",
   alternates: { canonical: "/" },
+  verification: {
+    google: "pwyfdDe7eDVI1cMvuebKjXMzJ6kFspOCtUPX7aDskuI",
+  },
   openGraph: {
     type: "website",
     siteName: "PDF Lovers",
