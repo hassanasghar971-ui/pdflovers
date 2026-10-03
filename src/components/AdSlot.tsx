@@ -2,6 +2,8 @@
 import Script from "next/script";
 import { useEffect, useRef } from "react";
 
+const ADSTERRA_KEY = process.env.NEXT_PUBLIC_ADSTERRA_KEY || "pwyfdDe7eDVI1cMvuebKjXMzJ6kFspOCtUPX7aDskuI";
+
 /**
  * Lazy-loaded, non-blocking monetization slot. Reads client/zone IDs from
  * public env vars — if they aren't configured yet the slot simply renders a
@@ -57,12 +59,11 @@ export function AdSenseUnit({ slot, className = "" }: { slot: string; className?
 }
 
 export function AdsterraScript() {
-  const key = process.env.NEXT_PUBLIC_ADSTERRA_KEY;
-  if (!key) return null;
+  if (!ADSTERRA_KEY) return null;
   return (
     <Script id="adsterra-config" strategy="lazyOnload">
       {`
-        atOptions = { key: '${key}', format: 'iframe', height: 90, width: 728, params: {} };
+        atOptions = { key: '${ADSTERRA_KEY}', format: 'iframe', height: 90, width: 728, params: {} };
       `}
     </Script>
   );
