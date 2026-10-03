@@ -1,0 +1,125 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+}
+
+:root {
+  --bg-base: #f4f5fb;
+  --bg-mesh-1: rgba(99, 102, 241, 0.18);
+  --bg-mesh-2: rgba(236, 72, 153, 0.14);
+  --bg-mesh-3: rgba(16, 185, 129, 0.12);
+  --surface: rgba(255, 255, 255, 0.72);
+  --surface-strong: rgba(255, 255, 255, 0.92);
+  --surface-border: rgba(15, 23, 42, 0.08);
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --shadow-soft: 0 20px 60px rgba(30, 41, 59, 0.08);
+}
+
+[data-theme="dark"] {
+  --bg-base: #0a0a14;
+  --bg-mesh-1: rgba(99, 102, 241, 0.3);
+  --bg-mesh-2: rgba(236, 72, 153, 0.22);
+  --bg-mesh-3: rgba(16, 185, 129, 0.18);
+  --surface: rgba(20, 20, 32, 0.6);
+  --surface-strong: rgba(24, 24, 38, 0.85);
+  --surface-border: rgba(255, 255, 255, 0.08);
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --shadow-soft: 0 20px 60px rgba(0, 0, 0, 0.45);
+}
+
+[data-theme="glass"] {
+  --bg-base: #1a1035;
+  --bg-mesh-1: rgba(236, 72, 153, 0.45);
+  --bg-mesh-2: rgba(99, 102, 241, 0.4);
+  --bg-mesh-3: rgba(14, 165, 233, 0.35);
+  --surface: rgba(255, 255, 255, 0.12);
+  --surface-strong: rgba(255, 255, 255, 0.18);
+  --surface-border: rgba(255, 255, 255, 0.28);
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.72);
+  --shadow-soft: 0 25px 80px rgba(217, 70, 239, 0.25);
+}
+
+html {
+  color-scheme: light dark;
+}
+
+body {
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  min-height: 100dvh;
+  background-image:
+    radial-gradient(45rem 30rem at 10% -10%, var(--bg-mesh-1), transparent 60%),
+    radial-gradient(40rem 28rem at 90% 0%, var(--bg-mesh-2), transparent 55%),
+    radial-gradient(50rem 35rem at 50% 110%, var(--bg-mesh-3), transparent 60%);
+  background-attachment: fixed;
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+.text-secondary {
+  color: var(--text-secondary);
+}
+
+.glass-card {
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  box-shadow: var(--shadow-soft);
+}
+
+.glass-card-strong {
+  background: var(--surface-strong);
+  border: 1px solid var(--surface-border);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  box-shadow: var(--shadow-soft);
+}
+
+.glass-pill {
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.hover-lift {
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease, border-color 0.35s ease;
+}
+.hover-lift:hover {
+  transform: translateY(-4px) scale(1.01);
+  box-shadow: 0 30px 70px rgba(99, 102, 241, 0.18);
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-14px) rotate(2deg); }
+}
+.animate-float {
+  animation: float-slow 7s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.animate-shimmer {
+  background-size: 200% 100%;
+  animation: shimmer 2.2s linear infinite;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  height: 6px;
+  width: 6px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: var(--surface-border);
+  border-radius: 999px;
+}
+
+input[type="checkbox"] {
+  accent-color: #8b5cf6;
+}
