@@ -1,11 +1,7 @@
 import type { MetadataRoute } from "next";
+import { getSiteUrl } from "@/lib/site-url";
 
-/* ------------------------------------------------------------------ *
- *  PDF Lovers — Robots directives
- *  Welcomes search + AI crawlers, protects internal routes.
- * ------------------------------------------------------------------ */
-
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://pdflovers.com";
+const SITE_URL = getSiteUrl();
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -18,15 +14,12 @@ export default function robots(): MetadataRoute.Robots {
       { userAgent: "Googlebot", allow: "/" },
       { userAgent: "Googlebot-Image", allow: "/" },
       { userAgent: "Bingbot", allow: "/" },
-      { userAgent: "YandexBot", allow: "/" },
       { userAgent: "DuckDuckBot", allow: "/" },
       { userAgent: "GPTBot", allow: "/" },
       { userAgent: "ClaudeBot", allow: "/" },
       { userAgent: "PerplexityBot", allow: "/" },
-      { userAgent: "AhrefsBot", allow: "/" },
-      { userAgent: "SemrushBot", allow: "/" },
     ],
     sitemap: `${SITE_URL}/sitemap.xml`,
-    host: SITE_URL,
+    // `host` removed — Yandex-only, deprecated, unrecognized by Google, unnecessary risk.
   };
 }
