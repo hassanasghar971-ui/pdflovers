@@ -1,5 +1,8 @@
-import type { MetadataRoute } from "next";
-import { siteConfig } from "@/lib/site-config";
+import { MetadataRoute } from "next";
+
+export const dynamic = "force-static";
+
+const BASE_URL = "https://pdflovers.com";
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -7,14 +10,10 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/api/", "/_next/", "/*.json$"],
-      },
-      {
-        userAgent: "GPTBot",
-        disallow: "/",
+        disallow: ["/api/", "/_next/"],
       },
     ],
-    sitemap: `${siteConfig.url}/sitemap.xml`,
-    host: siteConfig.url,
+    sitemap: `${BASE_URL}/sitemap.xml`,
+    host: BASE_URL,
   };
 }
