@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --accent: #dc2626;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+::selection {
+  background-color: rgba(220, 38, 38, 0.25);
+}
+
+@layer components {
+  .input {
+    @apply w-full rounded-xl border border-black/10 bg-white/70 px-4 py-2.5 text-sm text-neutral-900 outline-none ring-[#DC2626]/40 transition-all placeholder:text-neutral-400 focus:ring-2 dark:border-white/10 dark:bg-white/5 dark:text-white;
+  }
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.dark .glass {
+  background: rgba(255, 255, 255, 0.05);
+}
