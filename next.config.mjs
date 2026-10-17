@@ -19,5 +19,16 @@ const nextConfig = {
     ];
   },
 };
+// next.config.ts
+import type { NextConfig } from 'next';
 
+const nextConfig: NextConfig = {
+  webpack: (config) => {
+    // pdfjs-dist references the optional `canvas` Node binding — disable it for browser bundles
+    config.resolve.alias.canvas = false;
+    return config;
+  },
+};
+
+export default nextConfig;
 export default nextConfig;
