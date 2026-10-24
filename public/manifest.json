@@ -1,0 +1,64 @@
+{
+  "name": "PDF Lovers Pro - Free Online PDF Tools",
+  "short_name": "PDF Lovers Pro",
+  "description": "42+ free online PDF tools processed 100% client-side with WebAssembly. Merge, split, compress, convert, and edit PDF files privately in your browser.",
+  "start_url": "/?utm_source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#ffffff",
+  "theme_color": "#dc2626",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["utilities", "productivity", "business"],
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-192-maskable.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Merge PDF",
+      "short_name": "Merge",
+      "description": "Combine multiple PDF files into one",
+      "url": "/tools/merge-pdf",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Compress PDF",
+      "short_name": "Compress",
+      "description": "Reduce PDF file size",
+      "url": "/tools/compress-pdf",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "PDF to JPG",
+      "short_name": "To JPG",
+      "description": "Convert PDF pages to images",
+      "url": "/tools/pdf-to-jpg",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    }
+  ],
+  "screenshots": []
+}
