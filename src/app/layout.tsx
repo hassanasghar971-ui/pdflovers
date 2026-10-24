@@ -1,6 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import { ThemeProvider } from "next-themes";
+import Navbar from "@/components/navbar";
+import Footer from "@/components/footer";
+import AdsterraSocialBar from "@/components/ads/adsterra-social-bar";
 import "./globals.css";
 
 const inter = Inter({
@@ -169,7 +172,10 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <Navbar />
+          <main className="flex-1">{children}</main>
+          <Footer />
+          <AdsterraSocialBar />
         </ThemeProvider>
       </body>
     </html>
