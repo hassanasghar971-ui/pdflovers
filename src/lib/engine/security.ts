@@ -91,7 +91,7 @@ async function aesCbcNoPad(key: Uint8Array, iv: Uint8Array, data: Uint8Array): P
 /** ISO 32000-2 Algorithm 2.B (revision 6 password hash). */
 async function hash2B(pw: Uint8Array, salt: Uint8Array, udata: Uint8Array): Promise<Uint8Array> {
   let k = await sha(256, concat(pw, salt, udata));
-  let e = new Uint8Array(1);
+  let e: Uint8Array = new Uint8Array(1); // Explicitly typed to avoid TS 5.9 generic mismatch
   for (let i = 0; i < 64 || e[e.length - 1] > i - 32; i++) {
     const unit = concat(pw, k, udata);
     const k1 = new Uint8Array(unit.length * 64);
