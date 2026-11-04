@@ -1,4 +1,5 @@
 import type { OptionValue } from '../tools-registry';
+import type { MemoryScope } from '../memory';
 
 export type OptionValues = Record<string, OptionValue>;
 export type ProgressFn = (pct: number, label?: string) => void;
@@ -22,8 +23,7 @@ export interface ToolResult {
   note?: string;
 }
 
-/** The second argument is the per-run memory scope. Handlers may ignore it. */
-export type ToolHandler = (ctx: RunContext, mem: unknown) => Promise<ToolResult>;
+export type ToolHandler = (ctx: RunContext, mem: MemoryScope) => Promise<ToolResult>;
 export type HandlerMap = Record<string, ToolHandler>;
 
 export type ToolErrorCode =
