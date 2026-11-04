@@ -2,7 +2,10 @@ import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  // Turbopack empty config to satisfy Next.js 16 default behavior when using webpack aliases
+  turbopack: {},
   webpack: (config) => {
+    // Resolve canvas fallback for pdfjs-dist / tesseract in client-side bundling
     config.resolve.alias.canvas = false;
     return config;
   },
