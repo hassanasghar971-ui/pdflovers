@@ -1246,7 +1246,7 @@ async function extractFonts(ctx: RunContext): Promise<ToolResult> {
     const f = fonts[i];
     const head = `${pad(i + 1, digits)}. ${f.displayName}`;
     const facts = [`Type: ${fontTypeLabel(f)}`];
-    if (f.encoding) facts..push(`Encoding: ${f.encoding}`);
+    if (f.encoding) facts.push(`Encoding: ${f.encoding}`);
     let fileLine = '';
     if (f.subtype === 'Type3') {
       type3++;
