@@ -29,7 +29,7 @@ export interface ToolOption {
   key: string;
   label: string;
   type: ToolOptionType;
-  default?: OptionValue;
+  default: OptionValue;
   required?: boolean;
   help?: string;
   placeholder?: string;
@@ -211,7 +211,7 @@ export function countWords(text: string): number {
   return t ? t.split(/\s+/).length : 0;
 }
 
-type Extra = Partial<Omit<ToolOption, 'key' | 'label' | 'type'>>;
+type Extra = Partial<Omit<ToolOption, 'key' | 'label' | 'type' | 'default'>>;
 
 const toChoices = (c: ReadonlyArray<readonly [string, string]>): ToolOptionChoice[] =>
   c.map(([value, label]) => ({ value, label }));
@@ -1159,7 +1159,7 @@ const SPECS: Spec[] = [
     accept: PDF,
     out: 'PDF',
     opts: [
-      { key: 'signature', label: 'Your signature', type: 'signature', required: true, help: 'Draw with mouse or finger, or upload a PNG or JPG image.' },
+      { key: 'signature', label: 'Your signature', type: 'signature', default: '', required: true, help: 'Draw with mouse or finger, or upload a PNG or JPG image.' },
       optSelect('target', 'Sign which pages', 'last', [
         ['last', 'Last page'],
         ['first', 'First page'],
