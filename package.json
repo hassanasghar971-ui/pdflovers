@@ -1,32 +1,40 @@
+
 {
   "name": "pdf-lovers-pro",
   "version": "1.0.0",
   "private": true,
+  "engines": { "node": ">=20.9.0" },
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "dev": "next dev --webpack",
+    "build": "next build --webpack",
     "start": "next start",
-    "lint": "next lint"
+    "typecheck": "tsc --noEmit",
+    "verify": "tsx scripts/verify-registry.ts"
   },
   "dependencies": {
+    "@pdf-lib/fontkit": "^1.1.1",
+    "docx": "^9.0.2",
     "file-saver": "^2.0.5",
     "jszip": "^3.10.1",
-    "lucide-react": "^1.16.0",
-    "next": "16.0.0",
+    "mammoth": "^1.8.0",
+    "next": "^16.0.0",
     "pdf-lib": "^1.17.1",
-    "pdfjs-dist": "3.11.174",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "tesseract.js": "^5.1.0",
-    "xlsx": "^0.18.5"
+    "pdfjs-dist": "^4.10.38",
+    "pptxgenjs": "^3.12.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "tesseract.js": "^5.1.1",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
   },
   "devDependencies": {
-    "@types/node": "^20.0.0",
+    "@tailwindcss/postcss": "^4.1.0",
+    "@types/file-saver": "^2.0.7",
+    "@types/node": "^22.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
-    "@types/file-saver": "^2.0.7",
-    "postcss": "^8.0.0",
-    "tailwindcss": "^3.4.0",
-    "typescript": "^5.0.0"
+    "postcss": "^8.5.0",
+    "tailwindcss": "^4.1.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
   }
 }
