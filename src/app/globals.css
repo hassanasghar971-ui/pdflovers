@@ -1,0 +1,223 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+ * PDF Lovers Pro – design tokens (Tailwind v4 @theme)
+ * System font stack on purpose: zero font requests, zero layout shift.
+ * ------------------------------------------------------------------------ */
+@theme {
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+
+  --color-brand-50: #fff1f1;
+  --color-brand-100: #ffe0df;
+  --color-brand-200: #ffc7c5;
+  --color-brand-300: #ff9f9c;
+  --color-brand-400: #fb6a66;
+  --color-brand-500: #f0443e;
+  --color-brand-600: #e5322d;
+  --color-brand-700: #c02420;
+  --color-brand-800: #9f221e;
+  --color-brand-900: #84231f;
+
+  --shadow-soft: 0 1px 2px rgb(15 23 42 / 0.04), 0 8px 24px -8px rgb(15 23 42 / 0.12);
+  --shadow-lift: 0 2px 4px rgb(15 23 42 / 0.05), 0 16px 32px -12px rgb(229 50 45 / 0.28);
+}
+
+/* ------------------------------- Base layer ------------------------------- */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  [id] {
+    scroll-margin-top: 5rem;
+  }
+
+  button:not(:disabled),
+  [role="button"]:not(:disabled),
+  summary {
+    cursor: pointer;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-brand-600);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background: var(--color-brand-100);
+    color: var(--color-brand-900);
+  }
+
+  input[type="range"],
+  input[type="checkbox"],
+  input[type="radio"] {
+    accent-color: var(--color-brand-600);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* ----------------------------- Component layer ---------------------------- */
+@layer components {
+  /* Buttons */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold transition-colors duration-150 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .btn-primary {
+    @apply bg-brand-600 text-white shadow-sm hover:bg-brand-700 active:bg-brand-800;
+  }
+  .btn-secondary {
+    @apply border border-slate-300 bg-white text-slate-800 hover:bg-slate-50 active:bg-slate-100;
+  }
+  .btn-ghost {
+    @apply text-slate-700 hover:bg-slate-100 active:bg-slate-200;
+  }
+  .btn-lg {
+    @apply px-7 py-4 text-base;
+  }
+
+  /* Cards */
+  .card {
+    @apply rounded-2xl border border-slate-200 bg-white shadow-soft;
+  }
+  .card-hover {
+    @apply transition duration-200 hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-lift;
+  }
+
+  /* Form controls */
+  .field-label {
+    @apply mb-1.5 block text-sm font-medium text-slate-800;
+  }
+  .field-help {
+    @apply mt-1 text-xs text-slate-500;
+  }
+  .field-input {
+    @apply block w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/25 disabled:bg-slate-100 disabled:text-slate-500;
+  }
+
+  /* Dropzone */
+  .dropzone {
+    @apply flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 px-6 py-12 text-center transition-colors duration-150 hover:border-brand-400 hover:bg-brand-50;
+  }
+  .dropzone[data-active="true"] {
+    @apply border-brand-500 bg-brand-50;
+  }
+
+  /* File rows (reorderable list) */
+  .file-row {
+    @apply flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm shadow-sm;
+  }
+  .file-row[data-dragging="true"] {
+    @apply opacity-50;
+  }
+  .file-row[data-over="true"] {
+    @apply border-brand-500 bg-brand-50;
+  }
+
+  /* Progress */
+  .progress-track {
+    @apply h-2.5 w-full overflow-hidden rounded-full bg-slate-200;
+  }
+  .progress-fill {
+    @apply h-full rounded-full bg-brand-600 transition-[width] duration-200 ease-out;
+  }
+
+  /* Badges and chips */
+  .chip {
+    @apply inline-flex items-center rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-700;
+  }
+  .chip-brand {
+    @apply bg-brand-50 text-brand-700;
+  }
+
+  /* Spinner */
+  .spinner {
+    @apply inline-block h-5 w-5 rounded-full border-2 border-current border-t-transparent;
+    animation: plp-spin 0.75s linear infinite;
+  }
+
+  /* Signature pad */
+  .signature-pad canvas {
+    touch-action: none;
+    @apply w-full rounded-lg border border-slate-300 bg-white;
+  }
+
+  /* SEO long-form content */
+  .seo-content {
+    @apply text-base leading-relaxed text-slate-700;
+  }
+  .seo-content h2 {
+    @apply mb-3 mt-10 text-2xl font-bold tracking-tight text-slate-900;
+  }
+  .seo-content h3 {
+    @apply mb-2 mt-6 text-lg font-semibold text-slate-900;
+  }
+  .seo-content p {
+    @apply mt-4;
+  }
+  .seo-content ul {
+    @apply mt-4 list-disc space-y-1 pl-6;
+  }
+  .seo-content ol {
+    @apply mt-4 list-decimal space-y-2 pl-6;
+  }
+  .seo-content a {
+    @apply font-medium text-brand-700 underline underline-offset-2 hover:text-brand-800;
+  }
+  .seo-content strong {
+    @apply font-semibold text-slate-900;
+  }
+
+  /* Advertising containers
+   * Zero-CLS: the space is reserved up front (min-height 280px) and layout
+   * containment stops late-loading ad content from moving anything else.
+   * Ads are always labelled and kept visually separate from tool controls. */
+  .ad-wrap {
+    @apply mx-auto my-8 w-full max-w-4xl;
+  }
+  .ad-label {
+    @apply mb-1.5 text-center text-[0.6875rem] uppercase tracking-widest text-slate-400;
+  }
+  .ad-slot {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 280px;
+    overflow: hidden;
+    contain: layout style;
+    border-radius: 0.75rem;
+    border: 1px solid #e2e8f0;
+    background: #f8fafc;
+  }
+  .ad-slot > * {
+    max-width: 100%;
+  }
+}
+
+@keyframes plp-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
