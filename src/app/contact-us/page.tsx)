@@ -1,0 +1,13 @@
+export default function ContactUs() {
+  return (
+    <main className="max-w-4xl mx-auto px-4 py-12 prose text-slate-700">
+      <h1>Contact Us</h1>
+      <p>Get in touch with founder and architect **Hassan Asghar**:</p>
+      <ul>
+        <li><strong>Email:</strong> hassanasghar7868686@gmail.com</li>
+        <li><strong>WhatsApp 1:</strong> 03451098607</li>
+        <li><strong>WhatsApp 2:</strong> 03497726469</li>
+      </ul>
+    </main>
+  );
+}
