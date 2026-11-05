@@ -1,12 +1,46 @@
-export default function ContactUs() {
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Contact Us | PDF Lovers Pro",
+  description: "Get in touch with Hassan Asghar, founder of PDF Lovers Pro.",
+};
+
+export default function ContactUsPage() {
   return (
-    <main className="max-w-4xl mx-auto px-4 py-12 prose text-slate-700">
+    <main className="prose prose-slate mx-auto max-w-4xl px-4 py-12">
       <h1>Contact Us</h1>
-      <p>Get in touch with founder and architect **Hassan Asghar**:</p>
+
+      <p>
+        Get in touch with founder and architect <strong>Hassan Asghar</strong>:
+      </p>
+
       <ul>
-        <li><strong>Email:</strong> hassanasghar7868686@gmail.com</li>
-        <li><strong>WhatsApp 1:</strong> 03451098607</li>
-        <li><strong>WhatsApp 2:</strong> 03497726469</li>
+        <li>
+          <strong>Email:</strong>{" "}
+          <a href="mailto:hassanasghar7868686@gmail.com">
+            hassanasghar7868686@gmail.com
+          </a>
+        </li>
+        <li>
+          <strong>WhatsApp 1:</strong>{" "}
+          <a
+            href="https://wa.me/923451098607"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            0345 1098607
+          </a>
+        </li>
+        <li>
+          <strong>WhatsApp 2:</strong>{" "}
+          <a
+            href="https://wa.me/923497726469"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            0349 7726469
+          </a>
+        </li>
       </ul>
     </main>
   );
