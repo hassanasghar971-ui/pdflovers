@@ -13,15 +13,10 @@ export const metadata: Metadata = {
   alternates: { canonical: "https://pdflovers.com/contact-us" },
 };
 
-const EMAIL = "hassanasghar7868686@gmail.com"; // ← replace with a business address
+const EMAIL = "hassanasghar7868686@gmail.com"; // replace with a business address when you have one
 
 const contacts = [
-  {
-    label: "Email",
-    value: EMAIL,
-    href: `mailto:${EMAIL}`,
-    external: false,
-  },
+  { label: "Email", value: EMAIL, href: `mailto:${EMAIL}`, external: false },
   {
     label: "WhatsApp 1",
     value: "0345 1098607",
