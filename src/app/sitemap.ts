@@ -1,42 +1,58 @@
 import type { MetadataRoute } from "next";
 import { getAvailableToolSlugs } from "@/lib/tool-availability";
+import { LEGAL_PAGES } from "@/lib/tools-registry";
+import { TOOL_CONTENT } from "@/lib/tool-content";
+
+export const dynamic = "force-static";
 
 const BASE_URL = "https://pdflovers.com";
 
-// Update these dates when the page content actually changes.
-const LEGAL_PAGES = [
-  { path: "/privacy-policy", lastModified: "2026-01-15" },
-  { path: "/terms-and-conditions", lastModified: "2026-01-15" },
-  { path: "/dmca-notice", lastModified: "2026-01-15" },
-  { path: "/about-us", lastModified: "2026-01-15" },
-  { path: "/contact-us", lastModified: "2026-01-15" },
-];
+/*
+ * lastmod rules: Google only trusts this field if it changes when the page
+ * really changes. Never use new Date() here, because that would stamp every
+ * page with the build time on each deploy.
+ *
+ * - DEFAULT_LASTMOD: pages that have not been touched since launch.
+ * - REWRITE_LASTMOD: set this to the day you deploy the hand-written content
+ *   in tool-content.ts. Leave it alone afterwards unless that content changes.
+ * - LEGAL_LASTMOD: change per page only when that page's text changes.
+ */
+const DEFAULT_LASTMOD = "2026-01-15";
+const REWRITE_LASTMOD = "2026-01-15";
+const LEGAL_LASTMOD: Record<string, string> = {
+  "privacy-policy": "2026-01-15",
+  "terms-and-conditions": "2026-01-15",
+  "dmca-notice": "2026-01-15",
+  "about-us": "2026-01-15",
+  "contact-us": "2026-01-15",
+};
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const home: MetadataRoute.Sitemap = [
     {
       url: BASE_URL,
-      lastModified: new Date("2026-01-15"),
+      lastModified: new Date(REWRITE_LASTMOD),
       changeFrequency: "weekly",
       priority: 1.0,
     },
   ];
 
-  const toolPages: MetadataRoute.Sitemap = getAvailableToolSlugs().map((slug) => ({
-    url: `${BASE_URL}/tools/${slug}`,
-    lastModified: new Date("2026-01-15"),
-    changeFrequency: "monthly",
-    priority: 0.9,
-  }));
+  const toolPages: MetadataRoute.Sitemap = getAvailableToolSlugs().map((slug) => {
+    const hasHandWrittenContent = slug in TOOL_CONTENT;
+    return {
+      url: `${BASE_URL}/tools/${slug}`,
+      lastModified: new Date(hasHandWrittenContent ? REWRITE_LASTMOD : DEFAULT_LASTMOD),
+      changeFrequency: "monthly",
+      priority: hasHandWrittenContent ? 0.9 : 0.7,
+    };
+  });
 
-  const legalPages: MetadataRoute.Sitemap = LEGAL_PAGES.map(
-    ({ path, lastModified }) => ({
-      url: `${BASE_URL}${path}`,
-      lastModified: new Date(lastModified),
-      changeFrequency: "yearly",
-      priority: 0.3,
-    })
-  );
+  const legalPages: MetadataRoute.Sitemap = LEGAL_PAGES.map(({ slug, path }) => ({
+    url: `${BASE_URL}${path}`,
+    lastModified: new Date(LEGAL_LASTMOD[slug] ?? DEFAULT_LASTMOD),
+    changeFrequency: "yearly",
+    priority: 0.3,
+  }));
 
   return [...home, ...toolPages, ...legalPages];
 }
