@@ -6,6 +6,8 @@
  * (src/lib/pdf-engine.ts) are both driven entirely from this file.
  * ========================================================================== */
 
+import { TOOL_CONTENT } from './tool-content';
+
 /* --------------------------------- Types ---------------------------------- */
 
 export type OptionValue = string | number | boolean;
@@ -1499,7 +1501,7 @@ function fitParagraphs(s: Spec): string[] {
   return [...base, [last, ...extra].join(' ')];
 }
 
-/* --------------------------------- Builder -------------------------------- */
+/* -------------------------------- Builder -------------------------------- */
 
 const META_SUFFIX = ` Free, private, no upload.`;
 
@@ -1559,7 +1561,24 @@ function build(s: Spec): Tool {
 
 /* -------------------------------- Registry -------------------------------- */
 
-export const TOOLS: Tool[] = SPECS.map(build);
+/** Hand-written content (tool-content.ts) replaces the template copy for the top tools. */
+function withContent(tool: Tool): Tool {
+  const c = TOOL_CONTENT[tool.slug];
+  if (!c) return tool;
+  return {
+    ...tool,
+    metaTitle: c.metaTitle,
+    metaDescription: c.metaDescription,
+    h1: c.h1,
+    h2s: [...c.h2s],
+    paragraphs: [...c.paragraphs],
+    steps: [...c.steps],
+    faqs: [...c.faqs],
+    keywords: [...c.keywords],
+  };
+}
+
+export const TOOLS: Tool[] = SPECS.map(build).map(withContent);
 
 /** Alias kept for any code that imported the earlier export name. */
 export const TOOLS_REGISTRY = TOOLS;
