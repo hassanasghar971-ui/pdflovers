@@ -32,7 +32,6 @@ export const metadata: Metadata = {
   creator: SITE.founder,
   publisher: SITE.name,
   category: 'technology',
-  alternates: { canonical: '/' },
   manifest: '/manifest.webmanifest',
   // Renders: <meta name="google-site-verification" content="pwyfdDe7eDVI1cMvuebKjXMzJ6kFspOCtUPX7aDskuI" />
   verification: { google: SITE.googleVerification },
@@ -239,7 +238,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </div>
           </div>
           <div className="border-t border-slate-200 py-4 text-center text-xs text-slate-500">
-            © {new Date().getFullYear()} {SITE.name} · pdflovers.com · Your files never leave your device.
+            © {new Date().getFullYear()} {SITE.name} · pdflovers.com · Files are processed in your browser and are not uploaded to our servers.
           </div>
         </footer>
 
