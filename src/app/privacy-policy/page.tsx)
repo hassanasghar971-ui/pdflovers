@@ -1,11 +1,29 @@
-export default function PrivacyPolicy() {
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Privacy Policy | PDF Lovers Pro",
+  description:
+    "PDF Lovers Pro processes all PDFs locally in your browser. Your files never touch our servers.",
+};
+
+export default function PrivacyPolicyPage() {
   return (
-    <main className="max-w-4xl mx-auto px-4 py-12 prose text-slate-700">
+    <main className="prose prose-slate mx-auto max-w-4xl px-4 py-12">
       <h1>Privacy Policy</h1>
       <p>Last updated: January 2026</p>
-      <p>At PDF Lovers Pro (https://pdflovers.com), led by founder and architect Hassan Asghar, your privacy is our supreme priority. Because our tools operate 100% client-side via WebAssembly in your browser, your documents never touch our servers.</p>
+
+      <p>
+        At PDF Lovers Pro (https://pdflovers.com), led by founder and architect
+        Hassan Asghar, your privacy is our supreme priority. Because our tools
+        operate 100% client-side via WebAssembly in your browser, your documents
+        never touch our servers.
+      </p>
+
       <h2>Data Collection</h2>
-      <p>We do not store, view, retain, or transmit any PDF documents or files you process. All operations occur locally on your device.</p>
+      <p>
+        We do not store, view, retain, or transmit any PDF documents or files
+        you process. All operations occur locally on your device.
+      </p>
     </main>
   );
 }
