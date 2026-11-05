@@ -1,38 +1,11 @@
 import { PDFName } from "pdf-lib";
 import {
   type PdfHandler,
-  PdfToolError,
   loadPdf,
-  optStr,
   outName,
   pdfBlob,
   requireFile,
 } from "./shared";
-
-export const protectPdf: PdfHandler = async ({ files, options, onProgress }) => {
-  const file = requireFile(files);
-  const password = optStr(options, "password");
-  const confirm = optStr(options, "confirmPassword", password);
-
-  if (password.length < 4) {
-    throw new PdfToolError("Use a password with at least 4 characters.");
-  }
-  if (password !== confirm) {
-    throw new PdfToolError("The passwords do not match.");
-  }
-
-  onProgress?.(10, "Reading PDF");
-  const doc = await loadPdf(file);
-  const plain = await doc.save();
-
-  onProgress?.(50, "Encrypting");
-  // pdf-lib cannot encrypt, so this needs a dedicated library (see notes).
-  const { encryptPDF } = await import("@pdfsmaller/pdf-encrypt-lite");
-  const encrypted = await encryptPDF(plain, password, password);
-
-  onProgress?.(95, "Done");
-  return { files: [{ name: outName(file, "protected"), blob: pdfBlob(encrypted) }] };
-};
 
 export const removeMetadata: PdfHandler = async ({ files, onProgress }) => {
   const file = requireFile(files);
@@ -67,8 +40,7 @@ export const removeMetadata: PdfHandler = async ({ files, onProgress }) => {
   };
 };
 
-/** Keys must match the slugs in TOOLS_REGISTRY. */
+/** protect-pdf is intentionally absent until a verified encryption library is added. */
 export const securityHandlers: Record<string, PdfHandler> = {
-  "protect-pdf": protectPdf,
   "remove-metadata": removeMetadata,
 };
