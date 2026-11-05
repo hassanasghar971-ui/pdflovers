@@ -295,7 +295,7 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
 
   /* ----------------------------- protect-pdf ----------------------------- */
   'protect-pdf': {
-    metaTitle: 'Password Protect PDF with AES-256, No Upload',
+    metaTitle: 'Password Protect PDF, AES-256, No Upload',
     metaDescription:
       'Add a password to a PDF using AES-256 encryption in your browser. Your file and password are never sent to our servers.',
     h1: 'Password Protect a PDF Online for Free',
