@@ -2,14 +2,16 @@ import type { Metadata, Viewport } from 'next';
 import Link from 'next/link';
 import Script from 'next/script';
 import './globals.css';
-import { SITE, LEGAL_PAGES } from '@/lib/tools-registry';
+import { SITE, LEGAL_PAGES, TOOL_COUNT } from '@/lib/tools-registry';
 
 /* ---------------------------------- SEO ----------------------------------- */
+
+const DEFAULT_TITLE = `${SITE.name}: ${TOOL_COUNT} Free PDF Tools in Your Browser`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
   title: {
-    default: `${SITE.name} – 42 Free Online PDF Tools | Merge, Split, Compress & Convert`,
+    default: DEFAULT_TITLE,
     template: `%s | ${SITE.name}`,
   },
   description: SITE.description,
@@ -39,13 +41,13 @@ export const metadata: Metadata = {
     type: 'website',
     url: SITE.url,
     siteName: SITE.name,
-    title: `${SITE.name} – 42 Free Online PDF Tools`,
+    title: DEFAULT_TITLE,
     description: SITE.description,
     locale: 'en_US',
   },
   twitter: {
     card: 'summary_large_image',
-    title: `${SITE.name} – 42 Free Online PDF Tools`,
+    title: DEFAULT_TITLE,
     description: SITE.description,
   },
   robots: {
@@ -174,7 +176,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               </span>
             </Link>
             <nav aria-label="Main navigation" className="flex items-center gap-5 text-sm font-medium text-slate-700">
-              <Link href="/#tools" className="hover:text-red-600">
+              <Link href="/#all-tools" className="hover:text-red-600">
                 All Tools
               </Link>
               <Link href="/about-us" className="hidden hover:text-red-600 sm:inline">
