@@ -6,6 +6,7 @@ import ToolCard from '@/components/ToolCard';
 import ToolRunner from '@/components/ToolRunner';
 import { SITE, buildToolJsonLd, getAllSlugs, getTool } from '@/lib/tools-registry';
 import { categoryInfo, contentGaps, getFaqs, getRelated, getSections, getSteps, safeJson, toCard } from '@/lib/tool-view';
+import { isToolAvailable } from '@/lib/tool-availability';
 
 export const dynamicParams = false;
 
@@ -25,11 +26,14 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   // The root layout appends " | PDF Lovers Pro"; skip it when the title already carries the brand.
   const hasBrand = /pdf lovers/i.test(title);
   const keywords = Array.isArray(tool.keywords) ? (tool.keywords as unknown[]).map(String) : undefined;
+  // Tools switched off in tool-availability.ts stay reachable but are kept out of search.
+  const robots = isToolAvailable(tool.slug) ? undefined : { index: false, follow: true };
 
   return {
     title: hasBrand ? { absolute: title } : title,
     description: tool.metaDescription,
     keywords,
+    ...(robots ? { robots } : {}),
     alternates: { canonical: url },
     openGraph: { title, description: tool.metaDescription, url, type: 'website', siteName: SITE.name },
     twitter: { card: 'summary', title, description: tool.metaDescription },
