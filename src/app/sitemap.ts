@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { TOOLS_REGISTRY } from "@/lib/tools-registry";
+import { getAvailableToolSlugs } from "@/lib/tool-availability";
 
 const BASE_URL = "https://pdflovers.com";
 
@@ -16,20 +16,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const home: MetadataRoute.Sitemap = [
     {
       url: BASE_URL,
-      lastModified: new Date(),
+      lastModified: new Date("2026-01-15"),
       changeFrequency: "weekly",
       priority: 1.0,
     },
   ];
 
-  const toolPages: MetadataRoute.Sitemap = Object.keys(TOOLS_REGISTRY).map(
-    (slug) => ({
-      url: `${BASE_URL}/tools/${slug}`,
-      lastModified: new Date("2026-01-15"),
-      changeFrequency: "monthly",
-      priority: 0.9,
-    })
-  );
+  const toolPages: MetadataRoute.Sitemap = getAvailableToolSlugs().map((slug) => ({
+    url: `${BASE_URL}/tools/${slug}`,
+    lastModified: new Date("2026-01-15"),
+    changeFrequency: "monthly",
+    priority: 0.9,
+  }));
 
   const legalPages: MetadataRoute.Sitemap = LEGAL_PAGES.map(
     ({ path, lastModified }) => ({
