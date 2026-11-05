@@ -1,0 +1,11 @@
+import { notFound } from "next/navigation";
+import { getAvailableToolSlugs, isToolAvailable } from "@/lib/tool-availability";
+
+export const dynamicParams = false;
+
+export function generateStaticParams() {
+  return getAvailableToolSlugs().map((slug) => ({ slug }));
+}
+
+// Inside your page component, right after you read the slug:
+//   if (!isToolAvailable(slug)) notFound();
