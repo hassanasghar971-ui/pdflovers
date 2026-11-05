@@ -1,47 +1,88 @@
 import type { Metadata } from "next";
+import Link from "next/link";
+import {
+  LegalLayout,
+  LegalSection,
+  legalLinkClass,
+} from "@/components/legal/legal-layout";
 
 export const metadata: Metadata = {
   title: "Contact Us | PDF Lovers Pro",
-  description: "Get in touch with Hassan Asghar, founder of PDF Lovers Pro.",
+  description:
+    "Contact Hassan Asghar, founder of PDF Lovers Pro, by email or WhatsApp.",
+  alternates: { canonical: "https://pdflovers.com/contact-us" },
 };
+
+const EMAIL = "hassanasghar7868686@gmail.com"; // ← replace with a business address
+
+const contacts = [
+  {
+    label: "Email",
+    value: EMAIL,
+    href: `mailto:${EMAIL}`,
+    external: false,
+  },
+  {
+    label: "WhatsApp 1",
+    value: "0345 1098607",
+    href: "https://wa.me/923451098607",
+    external: true,
+  },
+  {
+    label: "WhatsApp 2",
+    value: "0349 7726469",
+    href: "https://wa.me/923497726469",
+    external: true,
+  },
+];
 
 export default function ContactUsPage() {
   return (
-    <main className="prose prose-slate mx-auto max-w-4xl px-4 py-12">
-      <h1>Contact Us</h1>
-
-      <p>
-        Get in touch with founder and architect <strong>Hassan Asghar</strong>:
+    <LegalLayout eyebrow="Support" title="Contact Us">
+      <p className="text-lg leading-relaxed text-slate-600">
+        Get in touch with founder and architect{" "}
+        <strong className="text-slate-900">Hassan Asghar</strong> for support,
+        feedback, or partnership enquiries.
       </p>
 
-      <ul>
-        <li>
-          <strong>Email:</strong>{" "}
-          <a href="mailto:hassanasghar7868686@gmail.com">
-            hassanasghar7868686@gmail.com
-          </a>
-        </li>
-        <li>
-          <strong>WhatsApp 1:</strong>{" "}
-          <a
-            href="https://wa.me/923451098607"
-            target="_blank"
-            rel="noopener noreferrer"
+      <ul className="grid gap-4 sm:grid-cols-3">
+        {contacts.map((c) => (
+          <li
+            key={c.label}
+            className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm"
           >
-            0345 1098607
-          </a>
-        </li>
-        <li>
-          <strong>WhatsApp 2:</strong>{" "}
-          <a
-            href="https://wa.me/923497726469"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            0349 7726469
-          </a>
-        </li>
+            <p className="text-sm font-medium text-slate-500">{c.label}</p>
+            <a
+              href={c.href}
+              {...(c.external
+                ? { target: "_blank", rel: "noopener noreferrer" }
+                : {})}
+              className={`${legalLinkClass} mt-1 block break-all`}
+            >
+              {c.value}
+            </a>
+          </li>
+        ))}
       </ul>
-    </main>
+
+      <LegalSection title="Before You Write">
+        <p>
+          Your PDFs are processed in your browser and never reach our servers,
+          so we can&apos;t recover or inspect a file for you. If a tool fails,
+          please tell us your browser, device, and which tool you used.
+        </p>
+        <p>
+          For copyright concerns, see our{" "}
+          <Link href="/dmca-notice" className={legalLinkClass}>
+            DMCA Notice
+          </Link>
+          . For data questions, see our{" "}
+          <Link href="/privacy-policy" className={legalLinkClass}>
+            Privacy Policy
+          </Link>
+          .
+        </p>
+      </LegalSection>
+    </LegalLayout>
   );
 }
