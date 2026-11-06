@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { Component, useEffect, useMemo, useRef, useState } from 'react';
+import type { ReactNode } from 'react';
 import { getTool } from '@/lib/tools-registry';
 import type { Tool } from '@/lib/tools-registry';
 import { ToolError, formatBytes, preloadEngine, runTool } from '@/lib/pdf-engine';
@@ -235,7 +236,7 @@ function Runner({ tool }: { tool: Tool }) {
 
         {files.length === 0 && (
           <p className="text-center text-xs text-gray-500">
-            Files are processed on your device and never uploaded. Up to 250 MB per file.
+            Files are processed in your browser and are not uploaded to our servers. Very large files depend on your device memory.
           </p>
         )}
       </div>
@@ -273,8 +274,37 @@ function Runner({ tool }: { tool: Tool }) {
   );
 }
 
+class RunnerBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
+  state = { failed: false };
+
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+
+  componentDidCatch(error: unknown) {
+    console.error('[ToolRunner] render error', error);
+  }
+
+  render() {
+    if (!this.state.failed) return this.props.children;
+    return (
+      <div role="alert" className="card p-6 text-center">
+        <p className="font-semibold">This tool hit an unexpected problem.</p>
+        <p className="mt-1 text-sm text-gray-600">Your files were not changed. Reload the tool and try again.</p>
+        <button type="button" className="btn btn-secondary mt-4 text-sm" onClick={() => this.setState({ failed: false })}>
+          Reload tool
+        </button>
+      </div>
+    );
+  }
+}
+
 export default function ToolRunner({ slug }: { slug: string }) {
   const tool = getTool(slug);
   if (!tool) return null;
-  return <Runner key={slug} tool={tool} />;
+  return (
+    <RunnerBoundary key={slug}>
+      <Runner key={slug} tool={tool} />
+    </RunnerBoundary>
+  );
 }
