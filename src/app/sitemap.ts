@@ -16,8 +16,6 @@ const BASE_URL = "https://pdflovers.com";
  * - REWRITE_LASTMOD: the day the hand-written content in tool-content.ts and
  *   the new home page went live. Leave it alone unless that content changes.
  * - LEGAL_LASTMOD: change per page only when that page's text changes.
- *
- * All dates below are placeholders: set them to the real dates.
  */
 const DEFAULT_LASTMOD = "2026-01-15";
 const REWRITE_LASTMOD = "2026-01-15";
