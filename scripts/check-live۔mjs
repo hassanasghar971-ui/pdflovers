@@ -1,0 +1,51 @@
+const base = (process.argv[2] || 'https://pdflovers-rouge.vercel.app').replace(/\/$/, '');
+let bad = 0;
+
+const get = async (path) => {
+  const res = await fetch(base + path, { redirect: 'manual' });
+  return { status: res.status, text: await res.text() };
+};
+const check = (label, ok, detail = '') => {
+  console.log(`${ok ? '✓' : '✗'} ${label}${detail ? ' (' + detail + ')' : ''}`);
+  if (!ok) bad++;
+};
+
+/* sitemap */
+const sm = await get('/sitemap.xml');
+const locs = [...sm.text.matchAll(/<loc>([^<]*)<\/loc>/g)].map((m) => m[1]);
+check('sitemap has 46 URLs', locs.length === 46, `found ${locs.length}`);
+check('no /tools/<number> URLs', !locs.some((u) => /\/tools\/\d/.test(u)));
+check('protect-pdf / unlock-pdf not in sitemap', !locs.some((u) => /protect-pdf|unlock-pdf/.test(u)));
+check('all URLs start with https://pdflovers.com', locs.every((u) => u.startsWith('https://pdflovers.com')));
+
+/* robots meta on tool pages */
+const robotsOf = (html) => (html.match(/<meta name="robots" content="([^"]*)"/) || [])[1] || '(none)';
+const protect = await get('/tools/protect-pdf');
+const merge = await get('/tools/merge-pdf');
+check('protect-pdf is noindex', /noindex/.test(robotsOf(protect.text)), robotsOf(protect.text));
+check('merge-pdf is indexable', !/noindex/.test(robotsOf(merge.text)), robotsOf(merge.text));
+
+/* home page */
+const home = await get('/');
+const title = (home.text.match(/<title>([^<]*)<\/title>/) || [])[1] || '';
+check('home title is 60 characters or fewer', title.length > 0 && title.length <= 60, `"${title}" = ${title.length}`);
+check('header links to /#all-tools', home.text.includes('href="/#all-tools"'));
+check('no broken /#tools link', !home.text.includes('href="/#tools"'));
+const suffixCount = (home.text.match(/Free, private, no upload/g) || []).length;
+check('cards no longer repeat "Free, private, no upload"', suffixCount === 0, `found ${suffixCount}`);
+
+/* canonical on legal pages */
+for (const p of ['privacy-policy', 'contact-us', 'about-us', 'terms-and-conditions', 'dmca-notice']) {
+  const r = await get('/' + p);
+  const canon = (r.text.match(/<link rel="canonical" href="([^"]*)"/) || [])[1] || '(none)';
+  check(`${p}: canonical is its own URL`, canon.endsWith('/' + p), canon);
+}
+
+/* brand assets (informational) */
+console.log('\nBrand assets:');
+for (const p of ['favicon.ico', 'icon.svg', 'apple-icon.png', 'icons/icon-512.png', 'opengraph-image.png', 'twitter-image.png']) {
+  console.log(`  ${p} -> ${(await get('/' + p)).status}`);
+}
+
+console.log(bad ? `\n${bad} check(s) failed.` : '\nAll checks passed.');
+process.exit(bad ? 1 : 0);
