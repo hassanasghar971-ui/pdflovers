@@ -160,7 +160,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="flex min-h-screen flex-col bg-white text-slate-900 antialiased">
         <a
           href="#main-content"
-          className="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:z-50 focus:rounded focus:bg-red-600 focus:px-3 focus:py-2 focus:text-white"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:z-50 focus:rounded focus:bg-brand-600 focus:px-3 focus:py-2 focus:text-white"
         >
           Skip to content
         </a>
@@ -168,21 +168,21 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/90 backdrop-blur">
           <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
             <Link href="/" className="flex items-center gap-2 text-xl font-extrabold tracking-tight" aria-label={`${SITE.name} home`}>
-              <span aria-hidden className="grid h-9 w-9 place-items-center rounded-lg bg-red-600 text-white">
+              <span aria-hidden className="grid h-9 w-9 place-items-center rounded-lg bg-brand-600 text-white">
                 P
               </span>
               <span>
-                PDF Lovers <span className="text-red-600">Pro</span>
+                PDF Lovers <span className="text-brand-600">Pro</span>
               </span>
             </Link>
             <nav aria-label="Main navigation" className="flex items-center gap-5 text-sm font-medium text-slate-700">
-              <Link href="/#all-tools" className="hover:text-red-600">
+              <Link href="/#all-tools" className="hover:text-brand-600">
                 All Tools
               </Link>
-              <Link href="/about-us" className="hidden hover:text-red-600 sm:inline">
+              <Link href="/about-us" className="hidden hover:text-brand-600 sm:inline">
                 About
               </Link>
-              <Link href="/contact-us" className="hover:text-red-600">
+              <Link href="/contact-us" className="hover:text-brand-600">
                 Contact
               </Link>
             </nav>
@@ -208,7 +208,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <ul className="mt-2 space-y-1 text-sm text-slate-600">
                 {LEGAL_PAGES.map((p) => (
                   <li key={p.slug}>
-                    <Link href={`/${p.slug}`} className="hover:text-red-600">
+                    <Link href={`/${p.slug}`} className="hover:text-brand-600">
                       {p.title}
                     </Link>
                   </li>
@@ -220,19 +220,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <p className="font-semibold">Get in touch</p>
               <ul className="mt-2 space-y-1 text-sm text-slate-600">
                 <li>
-                  <a href={`mailto:${SITE.email}`} className="hover:text-red-600">
+                  <a href={`mailto:${SITE.email}`} className="hover:text-brand-600">
                     {SITE.email}
                   </a>
                 </li>
                 <li>
                   WhatsApp:{' '}
-                  <a href={SITE.whatsappPrimaryLink} target="_blank" rel="noopener noreferrer" className="hover:text-red-600">
+                  <a href={SITE.whatsappPrimaryLink} target="_blank" rel="noopener noreferrer" className="hover:text-brand-600">
                     {SITE.whatsappPrimary}
                   </a>
                 </li>
                 <li>
                   WhatsApp:{' '}
-                  <a href={SITE.whatsappSecondaryLink} target="_blank" rel="noopener noreferrer" className="hover:text-red-600">
+                  <a href={SITE.whatsappSecondaryLink} target="_blank" rel="noopener noreferrer" className="hover:text-brand-600">
                     {SITE.whatsappSecondary}
                   </a>
                 </li>
