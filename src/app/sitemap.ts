@@ -10,12 +10,14 @@ const BASE_URL = "https://pdflovers.com";
 /*
  * lastmod rules: Google only trusts this field if it changes when the page
  * really changes. Never use new Date() here, because that would stamp every
- * page with the build time on each deploy.
+ * page with the build time on each deploy. Never use a date in the future.
  *
  * - DEFAULT_LASTMOD: pages that have not been touched since launch.
- * - REWRITE_LASTMOD: set this to the day you deploy the hand-written content
- *   in tool-content.ts. Leave it alone afterwards unless that content changes.
+ * - REWRITE_LASTMOD: the day the hand-written content in tool-content.ts and
+ *   the new home page went live. Leave it alone unless that content changes.
  * - LEGAL_LASTMOD: change per page only when that page's text changes.
+ *
+ * All dates below are placeholders: set them to the real dates.
  */
 const DEFAULT_LASTMOD = "2026-01-15";
 const REWRITE_LASTMOD = "2026-01-15";
@@ -47,8 +49,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     };
   });
 
-  const legalPages: MetadataRoute.Sitemap = LEGAL_PAGES.map(({ slug, path }) => ({
-    url: `${BASE_URL}${path}`,
+  // Built from the slug, the same way the footer links are built in layout.tsx.
+  const legalPages: MetadataRoute.Sitemap = LEGAL_PAGES.map(({ slug }) => ({
+    url: `${BASE_URL}/${slug}`,
     lastModified: new Date(LEGAL_LASTMOD[slug] ?? DEFAULT_LASTMOD),
     changeFrequency: "yearly",
     priority: 0.3,
