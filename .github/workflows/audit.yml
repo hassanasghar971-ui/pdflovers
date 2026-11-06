@@ -1,17 +1,55 @@
 name: Master audit
+
 on:
+  workflow_dispatch:
   push:
     branches: [main]
   pull_request:
+
 jobs:
-  static:
+  report:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
-          node-version: 22
-          cache: npm
-      - run: npm ci
-      - run: npm run typecheck
-      - run: npm run audit:master
+          fetch-depth: 2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Commit and repo files
+        if: always()
+        run: |
+          git log -1 --stat
+          echo "----- src/app and public -----"
+          git ls-files src/app public | sort
+
+      - name: Typecheck
+        if: always()
+        run: npm run typecheck
+
+      - name: Verify engine
+        if: always()
+        run: npm run verify:engine
+
+      - name: Verify content
+        if: always()
+        run: npm run verify:content
+
+      - name: Verify registry
+        if: always()
+        run: npm run verify
+
+      - name: Master audit (static + live)
+        if: always()
+        run: npm run audit:master -- --report-only --live https://pdflovers-rouge.vercel.app
+
+      - name: npm audit
+        if: always()
+        run: npm audit
