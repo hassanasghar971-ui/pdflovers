@@ -24,7 +24,7 @@ import {
   type ToolHandler,
   type ToolResult,
 } from './engine/types';
-import { MAX_FILE_BYTES, fileMatchesAccept, formatBytes, normalizeError, throwIfAborted } from './engine/shared';
+import { fileMatchesAccept, formatBytes, getSizeLimits, normalizeError, throwIfAborted } from './engine/shared';
 
 /* ------------------------------ Public re-exports ------------------------- */
 
@@ -110,10 +110,20 @@ export const GROUP_OF: Record<string, GroupId> = {
   'extract-fonts-pdf': 'analyze',
 };
 
+/** One retry covers a dropped connection. A stale chunk after a new deploy fails again and is reported by normalizeError. */
+async function loadGroup(group: GroupId): Promise<EngineModule> {
+  try {
+    return await LOADERS[group]();
+  } catch {
+    await new Promise<void>((resolve) => setTimeout(resolve, 400));
+    return await LOADERS[group]();
+  }
+}
+
 async function getHandler(slug: string): Promise<ToolHandler> {
   const group = GROUP_OF[slug];
   if (!group) throw new ToolError(`No engine is registered for "${slug}".`, 'unsupported');
-  const mod = await LOADERS[group]();
+  const mod = await loadGroup(group);
   const handler = mod.handlers[slug];
   if (!handler) throw new ToolError(`The "${slug}" engine is not available.`, 'unsupported');
   return handler;
@@ -160,14 +170,26 @@ function validateFiles(tool: Tool, files: File[]): void {
     throw new ToolError(`${tool.name} accepts up to ${plural(tool.maxFiles, 'file')}. You added ${files.length}.`);
   }
   const extensions = tool.accept.filter((a) => a.startsWith('.')).join(', ');
+  const limits = getSizeLimits();
+  let sum = 0;
   for (const f of files) {
     if (f.size === 0) throw new ToolError(`"${f.name}" is empty (0 bytes).`);
-    if (f.size > MAX_FILE_BYTES) {
-      throw new ToolError(`"${f.name}" is ${formatBytes(f.size)}. The limit is ${formatBytes(MAX_FILE_BYTES, 0)} per file because processing happens in your browser memory.`);
+    if (f.size > limits.perFile) {
+      throw new ToolError(
+        `"${f.name}" is ${formatBytes(f.size)}. The limit on this device is ${formatBytes(limits.perFile, 0)} per file because processing happens in your browser memory.`,
+        'out-of-memory',
+      );
     }
     if (!fileMatchesAccept(f, tool.accept)) {
       throw new ToolError(`"${f.name}" is not a supported file type for ${tool.name}. Accepted: ${extensions}.`);
     }
+    sum += f.size;
+  }
+  if (sum > limits.total) {
+    throw new ToolError(
+      `These files add up to ${formatBytes(sum)}. The limit on this device is ${formatBytes(limits.total, 0)} in one go because processing happens in your browser memory. Try a smaller batch.`,
+      'out-of-memory',
+    );
   }
 }
 
@@ -276,6 +298,11 @@ export async function runTool(slug: string, ctx: RunContext): Promise<ToolResult
     throw normalizeError(e);
   } finally {
     // Revokes object URLs, purges canvases, closes bitmaps, terminates workers.
-    await mem.dispose();
+    // A cleanup failure must never replace a successful result.
+    try {
+      await mem.dispose();
+    } catch (e) {
+      console.error('[pdf-engine] cleanup failed', e);
+    }
   }
 }
