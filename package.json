@@ -9,7 +9,8 @@
     "start": "next start",
     "typecheck": "tsc --noEmit",
     "verify": "tsx scripts/verify-registry.ts",
-    "verify:content": "tsx scripts/verify-content.ts"
+    "verify:content": "tsx scripts/verify-content.ts",
+    "verify:engine": "tsx scripts/verify-engine.ts"
   },
   "dependencies": {
     "@pdf-lib/fontkit": "^1.1.1",
