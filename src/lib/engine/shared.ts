@@ -34,6 +34,27 @@ export const MAX_FILE_BYTES = 250 * 1024 * 1024;
 export const MAX_CANVAS_PIXELS = 16_000_000;
 export const MAX_CANVAS_DIMENSION = 16_384;
 
+export interface SizeLimits {
+  perFile: number;
+  total: number;
+}
+
+/**
+ * Memory limits scaled to the device. Chrome reports navigator.deviceMemory; Safari does not,
+ * so phones and tablets are detected from the user agent. The numbers are conservative guesses
+ * (parsing a PDF can take several times its size in RAM), not measured values.
+ */
+export function getSizeLimits(): SizeLimits {
+  const MB = 1024 * 1024;
+  if (typeof navigator === 'undefined') return { perFile: MAX_FILE_BYTES, total: 500 * MB };
+  const mem = (navigator as Navigator & { deviceMemory?: number }).deviceMemory;
+  const ua = navigator.userAgent || '';
+  const mobile = /Android|iPhone|iPad|iPod|Mobile/i.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  if (mem !== undefined && mem <= 2) return { perFile: 50 * MB, total: 100 * MB };
+  if (mobile || (mem !== undefined && mem <= 4)) return { perFile: 100 * MB, total: 200 * MB };
+  return { perFile: MAX_FILE_BYTES, total: 500 * MB };
+}
+
 /**
  * pdf.js loads CMaps (CJK fonts) and standard font data at runtime.
  * Default is jsDelivr (allowed by the CSP: connect-src https:).
@@ -202,7 +223,7 @@ export function sniffImageType(b: Uint8Array): SniffedImage {
   if (b.length > 3 && b[0] === 0xff && b[1] === 0xd8 && b[2] === 0xff) return 'jpeg';
   if (b.length > 7 && b[0] === 0x89 && b[1] === 0x50 && b[2] === 0x4e && b[3] === 0x47) return 'png';
   if (b.length > 5 && b[0] === 0x47 && b[1] === 0x49 && b[2] === 0x46 && b[3] === 0x38) return 'gif';
-  if (b.length > 11 && b[0] === 0x52 && b[1] === 0x49 && b[2] === 0x46 && b[3] === 0x38 && b[8] === 0x57 && b[9] === 0x45 && b[10] === 0x42 && b[11] === 0x50) return 'webp';
+  if (b.length > 11 && b[0] === 0x52 && b[1] === 0x49 && b[2] === 0x46 && b[3] === 0x46 && b[8] === 0x57 && b[9] === 0x45 && b[10] === 0x42 && b[11] === 0x50) return 'webp';
   if (b.length > 2 && b[0] === 0x42 && b[1] === 0x4d) return 'bmp';
   return 'unknown';
 }
@@ -500,6 +521,15 @@ export function normalizeError(e: unknown, fileName?: string): ToolError {
   if (name === 'AbortError' || name === 'AbortException' || name === 'RenderingCancelledException') {
     return new ToolError('Cancelled.', 'aborted');
   }
+  if (
+    name === 'ChunkLoadError' ||
+    /Loading chunk [\w-]+ failed|Failed to fetch dynamically imported module|error loading dynamically imported module|Importing a module script failed/i.test(msg)
+  ) {
+    return new ToolError(
+      'This tool could not be loaded. Your connection may have dropped, or the site was updated while this page was open. Reload the page and try again.',
+      'internal',
+    );
+  }
   if (name === 'PasswordException') {
     return err?.code === 2
       ? new ToolError('The password is incorrect. Please try again.', 'wrong-password')
@@ -592,6 +622,7 @@ export interface OpenPdfOptions {
 /** Open a PDF with pdf.js. Caller MUST destroy the result (prefer withPdfDocument). */
 export async function openPdfJsDocument(bytes: Uint8Array, opts: OpenPdfOptions = {}): Promise<PDFDocumentProxy> {
   const pdfjs = await loadPdfJs();
+  throwIfAborted(opts.signal);
   const assetBase = PDFJS_ASSET_BASE || `https://cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjs.version}`;
   const task = pdfjs.getDocument({
     // pdf.js transfers (detaches) the buffer it receives, so hand it a copy and keep ours usable.
