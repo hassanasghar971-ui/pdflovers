@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import type { ReactNode } from 'react';
 import Link from 'next/link';
-import Script from 'next/script';
 import './globals.css';
 import {
   SITE,
@@ -11,6 +10,7 @@ import {
   TOOLS_BY_SLUG,
 } from '@/lib/tools-registry';
 import { safeJson } from '@/lib/tool-view';
+import SocialBarGate from '@/components/SocialBarGate';
 
 const DEFAULT_TITLE = `${SITE.name}: ${TOOL_COUNT} Free PDF Tools in Your Browser`;
 
@@ -38,7 +38,6 @@ export const metadata: Metadata = {
     description: SITE.description,
     locale: 'en_US',
   },
-  // Change to 'summary_large_image' only after src/app/twitter-image.png is live.
   twitter: {
     card: 'summary',
     title: DEFAULT_TITLE,
@@ -68,43 +67,6 @@ const WEBSITE_JSON_LD = {
   name: SITE.name,
   url: SITE.url,
 };
-
-/* Adsterra Social Bar gate:
- * - loads only after NEEDED user clicks, or after a successful tool run
- *   (the engine fires "plp:action"),
- * - at most once per 30 minutes per browser (localStorage cooldown).
- * Phase 5 will add a consent check here. */
-const SOCIAL_BAR_GATE = `
-(function () {
-  var KEY = 'plp_sb_ts';
-  var COOLDOWN = 30 * 60 * 1000;
-  var NEEDED = 2;
-  var SRC = 'https://pl31804194.profitableratecpmnetwork.com/72/bc/4b/72bc4b4ca161783e4681f10c50bbf607.js';
-  var count = 0;
-  var loaded = false;
-  try {
-    var last = parseInt(localStorage.getItem(KEY) || '0', 10);
-    if (last && Date.now() - last < COOLDOWN) return;
-  } catch (e) {}
-  function load() {
-    if (loaded) return;
-    loaded = true;
-    document.removeEventListener('click', onClick, true);
-    window.removeEventListener('plp:action', load);
-    try { localStorage.setItem(KEY, String(Date.now())); } catch (e) {}
-    var s = document.createElement('script');
-    s.src = SRC;
-    s.async = true;
-    document.body.appendChild(s);
-  }
-  function onClick() {
-    count += 1;
-    if (count >= NEEDED) load();
-  }
-  document.addEventListener('click', onClick, true);
-  window.addEventListener('plp:action', load);
-})();
-`;
 
 function popularTools() {
   return POPULAR_SLUGS.map((slug) => TOOLS_BY_SLUG[slug]).filter(
@@ -140,8 +102,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               <Link href="/#all-tools" className="btn btn-ghost">
                 All tools
               </Link>
-              <Link href="/tools/merge-pdf" className="btn btn-primary">
-                Merge PDF
+              <Link href="/contact-us" className="btn btn-primary">
+                Contact
               </Link>
             </nav>
           </div>
@@ -233,11 +195,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           dangerouslySetInnerHTML={{ __html: safeJson(WEBSITE_JSON_LD) }}
         />
 
-        <Script
-          id="adsterra-social-bar-gate"
-          strategy="afterInteractive"
-          dangerouslySetInnerHTML={{ __html: SOCIAL_BAR_GATE }}
-        />
+        <SocialBarGate />
       </body>
     </html>
   );
