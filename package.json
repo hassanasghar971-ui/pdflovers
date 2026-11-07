@@ -2,7 +2,9 @@
   "name": "pdf-lovers-pro",
   "version": "1.0.0",
   "private": true,
-  "engines": { "node": ">=20.9.0" },
+  "engines": {
+    "node": "22.x"
+  },
   "scripts": {
     "dev": "next dev --webpack",
     "build": "next build --webpack",
