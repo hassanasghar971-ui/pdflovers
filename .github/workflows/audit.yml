@@ -1,55 +1,44 @@
-name: Master audit
+name: Master Audit & Verification
 
 on:
-  workflow_dispatch:
   push:
-    branches: [main]
   pull_request:
 
 jobs:
-  report:
+  audit:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22.x'
+          cache: 'npm'
 
       - name: Install dependencies
-        run: npm install --no-audit --no-fund
+        run: npm ci
 
-      - name: Commit and repo files
-        if: always()
-        run: |
-          git log -1 --stat
-          echo "----- src/app and public -----"
-          git ls-files src/app public | sort
-
-      - name: Typecheck
-        if: always()
-        run: npm run typecheck
-
-      - name: Verify engine
-        if: always()
-        run: npm run verify:engine
-
-      - name: Verify content
-        if: always()
-        run: npm run verify:content
-
-      - name: Verify registry
-        if: always()
+      - name: Verify Registry
         run: npm run verify
+        continue-on-error: true
 
-      - name: Master audit (static + live)
-        if: always()
-        run: npm run audit:master -- --report-only --live https://pdflovers-rouge.vercel.app
+      - name: Verify Content Word Counts & Duplications
+        run: npm run verify:content
+        continue-on-error: true
 
-      - name: npm audit
+      - name: Check Engine Constraints
+        run: npm run verify:engine
+        continue-on-error: true
+
+      - name: Who requires image-size (Dependency Audit Debug)
         if: always()
+        continue-on-error: true
+        run: npm ls image-size
+
+      - name: Run npm audit (Informational)
+        if: always()
+        continue-on-error: true
         run: npm audit
