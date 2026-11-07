@@ -97,7 +97,7 @@ export const SITE = {
   url: 'https://pdflovers.com',
   tagline: 'Free, private PDF tools that run entirely in your browser',
   description:
-    'PDF Lovers Pro offers 42 free PDF tools (merge, split, compress, convert, edit, sign, OCR and more) that run 100% in your browser. Your files never leave your device.',
+    'PDF Lovers Pro offers 42 free PDF tools (merge, split, compress, convert, edit, sign, OCR and more) that run 100% in your browser. Files are processed in your browser, not uploaded to our servers.',
   founder: 'Hassan Asghar',
   founderTitle: 'Lead Architect & Founder',
   email: 'hassanasghar7868686@gmail.com',
